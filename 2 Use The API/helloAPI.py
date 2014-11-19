@@ -24,10 +24,33 @@ dbclient = dropbox.client.DropboxClient(access_token, locale="en-US", rest_clien
 
 if user_id:
 	userDetail = dbclient.account_info()
+	print "---------------------------------"
 	print "Log in complete."
+	print "................................."
 	print "Display name: " + userDetail['display_name']
 	print "Email: " + userDetail['email']
 	print "User Id: " + str(userDetail['uid'])
+	print "................................."
+
+	#working with files
+	#uploading a file
+	testfile = open('test.txt', 'rb')
+	response = dbclient.put_file('/test.txt', testfile)
+	print "uploaded file:", response['path']
+	print "................................."
+
+	#retrieving the content of a folder
+	folder_metadata = dbclient.metadata('/')
+	print "folder: ", folder_metadata['path']
+	print "................................."
+
+	#downloading a file
+	testfile, metadata = dbclient.get_file_and_metadata('/test.txt')
+	out = open('test.txt', 'wb')
+	out.write(testfile.read())
+	out.close()
+	print "downloaded file: ", metadata['path']
+	print "................................."
 else:
 	print "Sadly, something went wrong."
 
